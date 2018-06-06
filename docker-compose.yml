@@ -1,0 +1,55 @@
+version: '3'
+
+services:
+    db:
+        image: mysql:5.7
+        restart: always
+        environment:
+            MYSQL_DATABASE: sample
+            MYSQL_ROOT_PASSWORD: password
+        ports:
+            - "3306:3306"
+        volumes:
+            - mysql-db:/var/lib/mysql
+            - ./config/nginx/my.cnf:/etc/mysql/conf.d/my.cnf
+        command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
+    django:
+        build:
+            context: ./backend
+        command: ./wait-for-it.sh db:3306 -- pipenv run ./sample/manage.py runserver 0.0.0.0:8000
+        environment:
+            - DJANGO_SECRET_KEY=secret_key
+            - DATABASE_URL=mysql://root:password@db:3306/sample
+        expose:
+            - "8000"
+        ports:
+            - "8000:8000"
+        volumes:
+            - ./backend:/app
+        depends_on:
+            - db
+    nuxt:
+        build:
+            context: ./frontend
+        command: bash -c "yarn run dev"
+        volumes:
+            - ./frontend:/app
+        expose:
+            - "3000"
+        ports:
+            - "3000:3000"
+        depends_on:
+            - django
+    nginx:
+        image: nginx:latest
+        ports:
+            - "80:80"
+        volumes:
+            - ./config/nginx:/etc/nginx/conf.d
+        depends_on:
+            - django
+            - nuxt
+
+volumes:
+    mysql-db:
+        driver: local

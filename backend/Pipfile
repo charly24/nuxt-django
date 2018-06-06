@@ -1,0 +1,23 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[dev-packages]
+ipython = "*"
+mixer = "*"
+pytest-django = "*"
+django-extensions = "*"
+
+[packages]
+django = "==2.0.5"
+django-configurations = "*"
+django-extensions = "*"
+dj-database-url = "*"
+mysqlclient = "*"
+djangorestframework = "*"
+djoser = "*"
+django-cors-headers = "*"
+
+[requires]
+python_version = "3.6"

@@ -1,0 +1,13 @@
+{
+  "name": "sample",
+  "version": "1.0.0",
+  "description": "Nuxt Django Sample",
+  "author": "Ryo Nagaoka <rryo.nagaoka@sample.com>",
+  "private": true,
+  "scripts": {
+    "setup": "yarn run clean && yarn run copyassets && yarn run copystatic",
+    "clean": "mkdir -p public && rm -rf public/*",
+    "copyassets": "cp -R backend/ public/assets",
+    "copystatic": "cp -R frontend/static/* public",
+  }
+}
